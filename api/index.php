@@ -74,6 +74,12 @@ switch ($api_requests[1]) {
           $response['error'] = 'No data given';
           http_response_code(400);
         }
+      } elseif($api_requests[2] == "update") {
+        $idfield = $_POST['idfield'];
+        $identifier = $_POST['identifier'];
+        $newval = $_POST['newval'];
+        $field = $_POST['field'];
+        $sc->query("UPDATE $api_requests[3] SET $field = '$newval' WHERE $idfield == $identifier;");
       } else {
         $sc->debug("TABLE NOT GIVEN");
         $response['rc'] = 400;
@@ -81,7 +87,7 @@ switch ($api_requests[1]) {
         http_response_code(400);
       }
     } else {
-      $sc->debug("ILLIGAL METHOD");
+      debug("ILLIGAL METHOD");
       $response['rc'] = 400;
       $response['error'] = 'Method not avaliable';
       http_response_code(400);
