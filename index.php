@@ -6,6 +6,4 @@
 
   //do routing
   require("$root/config/routing.php");
-
-
 ?>
