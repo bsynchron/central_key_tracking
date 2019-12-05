@@ -26,17 +26,8 @@ if(substr($request, 0, 4) == "/api"){
 
   if(is_int($pathindex)){
     $title = $paths[$pathindex+2];
-    if(in_array($request, $all_access)){
-      include($root."/views/default.php");
-      require "$root".$paths[$pathindex+1];
-    } elseif($_SESSION['access_level'] >= $paths[$pathindex+3]) {
-      include($root."/views/default.php");
-      require "$root".$paths[$pathindex+1];
-    } else {
-      //403
-      echo("403");
-      die();
-    }
+    include($root."/views/default.php");
+    require "$root".$paths[$pathindex+1];
   } else {
     //404
     echo("404");

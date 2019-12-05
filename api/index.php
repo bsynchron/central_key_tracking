@@ -1,19 +1,42 @@
 <?php
+function debug($txt){
+  file_put_contents("php://stdout", "\033[1;31mAPI: $txt\033[0m\n");
+}
+
 function array_push_assoc($array, $key, $value){
   $array[$key] = $value;
   return $array;
 }
-
 $root = $_SERVER['DOCUMENT_ROOT'];
 include("$root/controllers/SQLController.php");
+include("$root/config/tokens.php");
 
 $request = substr($_SERVER['REQUEST_URI'], 4);
 if(substr($request, 0, 1) != "/"){
   $request = "/$request";
 }
 
-$api_requests = explode("/", $request);
+$args = explode("?", $request);
+$api_requests = explode("/", $args[0]);
+unset($args[0]);
 file_put_contents("php://stdout", json_encode($api_requests)."\n");
+
+
+debug("ARGS: ".json_encode($args));
+debug("REQUEST: ".json_encode($api_requests));
+if(!isset($_GET['token'])){
+  $response=["rc" => 401, "requested" => $api_requests[2], "error" => "No token"];
+  http_response_code(401);
+  print(json_encode($response));
+  die();
+}
+debug("token = ".$_GET['token']." ".array_search($_GET['token'], $tokens));
+if(!is_numeric(array_search($_GET['token'], $tokens)) or !isset($_GET['token'])){
+  $response=["rc" => 401, "requested" => $api_requests[2], "error" => "Invalid token"];
+  http_response_code(401);
+  print(json_encode($response));
+  die();
+}
 
 $response=["rs" => 200, "endpoint" => "$request"];
 
