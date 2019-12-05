@@ -16,7 +16,8 @@ if(substr($request, 0, 4) == "/api"){
 } else {
   file_put_contents("php://stdout", "NORMAL REQUEST\n");
 
-  $paths = ["/","/views/index.php","CKT"];
+  $paths = ["/","/views/index.php","CKT",
+            "/map", "/views/map/index.php", "MAP"];
 
   if(substr($request, -1) == "/" and strlen($request) > 1){
     $request = substr_replace($request, "", -1);

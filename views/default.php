@@ -2,5 +2,5 @@
 <?php
   print("<title>$title</title>");
 ?>
+<meta charset="UTF-8">
 </head>
-<h1>DEFAULT<h1>

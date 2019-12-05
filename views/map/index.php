@@ -1,25 +1,18 @@
-<!doctype html>
-<html>
 <head>
-<meta charset="UTF-8">
-<title>LTK</title>
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
-integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
-crossorigin=""/>
-<style>
-	body { margin: 0}	
-</style>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
+  integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+  crossorigin=""/>
+  <style>
+  	body { margin: 0}
+  </style>
 </head>
-
 <body>
 	<div id="map" style="height: 500px"></div>
 </body>
-	
 <script>
 	document.getElementById('map').style.cssText = 'height: ' + document.documentElement.clientHeight + 'px;';
 </script>
-
-<script src="leaflet/leaflet.js"></script>
+<script src="/src/js/leaflet/leaflet.js"></script>
 <script>
 	var map = L.map('map').setView([53.4996733, 10.0028465], 17.69);
 	var markers = [];
@@ -33,7 +26,7 @@ crossorigin=""/>
 			.addTo(map)
 			.bindPopup('Key 1')
 	);
-	
+
 	markers.push(
 		L.circle([53.5000233, 10.0029665], {radius: 10, color: 'red'})
 			.addTo(map)
@@ -41,4 +34,3 @@ crossorigin=""/>
 	);
 
 </script>
-</html>
