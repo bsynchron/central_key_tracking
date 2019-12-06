@@ -88,17 +88,17 @@ include("$root/controllers/SQLController.php");
 
 		// add new markers
 		console.log(http.responseText);
-		let keys = JSON.parse(http.responseText);
-		for (let key in keys.content) {
+		let keys = JSON.parse(http.responseText).content;
+		keys.forEach((key) => {
 			latlong = key.lastPos.split(',');
-			lat = lastlong[0];
-			long = lastlong[1];
+			lat = latlong[0];
+			long = latlong[1];
 			markers.push(
 				L.circle([lat, long], {radius: 10, color: 'red'})
 				.addTo(map)
 				.bindPopup(key.keyName)
 			)
-		}
+		})
 	}
   }, 1000);
 	// markers.push(
