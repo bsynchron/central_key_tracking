@@ -42,7 +42,7 @@ if(!is_numeric(array_search($_GET['token'], $tokens)) or !isset($_GET['token']))
   die();
 }
 
-$response=["rs" => 200, "endpoint" => "$request"];
+$response=["rc" => 200, "endpoint" => "$request"];
 
 switch ($api_requests[1]) {
   case 'test':
@@ -112,7 +112,7 @@ switch ($api_requests[1]) {
       }
 
       if($missing_post == []){
-        $sql_result = $sc->query("UPDATE $api_requests[3] SET $field = '$newval' WHERE $idfield == $identifier;");
+        $sql_result = $sc->query("UPDATE $api_requests[3] SET $field = '$newval' WHERE $idfield = $identifier;");
         $response = array_push_assoc($response, "content", $sql_result);
       } else {
         $response['rc'] = 400;
@@ -136,5 +136,4 @@ switch ($api_requests[1]) {
 }
 
 print(json_encode($response));
-
 ?>
