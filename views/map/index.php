@@ -94,8 +94,14 @@ include("$root/controllers/SQLController.php");
 			latlong = key.lastPos.split(',');
 			lat = latlong[0];
 			long = latlong[1];
+
+			let color = 'red';
+			if(key.triggered) {
+				color = 'blue';
+			}
+
 			markers.push(
-				L.circle([lat, long], {radius: 10, color: 'red'})
+				L.circle([lat, long], {radius: 10, color: color})
 				.addTo(map)
 				.bindPopup(key.keyName)
 			)
