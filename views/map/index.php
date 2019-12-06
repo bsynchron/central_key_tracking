@@ -96,7 +96,7 @@ include("$root/controllers/SQLController.php");
 			long = latlong[1];
 
 			let color = 'red';
-			if(key.triggered) {
+			if(key.triggered == 1) {
 				color = 'blue';
 			}
 

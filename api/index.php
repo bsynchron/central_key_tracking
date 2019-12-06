@@ -112,8 +112,15 @@ switch ($api_requests[1]) {
       }
 
       if($missing_post == []){
+        $key = $identifier;
         $sql_result = $sc->query("UPDATE $api_requests[3] SET $field = '$newval' WHERE $idfield = $identifier;");
         $response = array_push_assoc($response, "content", $sql_result);
+        if($sc->query("SELECT triggered FROM track_keys WHERE keyName = $key;")[0]['triggered'] == true){
+          $response['triggered'] = true;
+          $sc->query("UPDATE track_keys SET triggered = false WHERE keyName = $key;");
+        } else {
+          $response['triggered'] = false;
+        }
       } else {
         $response['rc'] = 400;
         $response['error'] = "Missing POST data!";
@@ -125,6 +132,26 @@ switch ($api_requests[1]) {
       $response['rc'] = 400;
       $response['error'] = 'Method not avaliable';
       http_response_code(400);
+    }
+    break;
+
+  case 'notify':
+    if(isset($api_requests[2]) and $api_requests[2] != ""){
+      $key = $sc->query("SELECT keyName FROM track_keys WHERE keyName = '$api_requests[2]';");
+      if($key == []){
+        //key not found
+        $response['rc'] = 401;
+        $response['error'] = "No key found!";
+        break;
+      }
+      //key found
+      $sc->query("UPDATE track_keys SET triggered = true;");
+      $response['content'] = true;
+      debug("SET UP TRIGGER [".$key[0]['keyName']."]");
+    } else {
+      $response['rc'] = 401;
+      $response['error'] = "No key given!";
+      break;
     }
     break;
 

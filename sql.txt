@@ -7,7 +7,8 @@ CREATE TABLE users(
 CREATE TABLE track_keys(
   keyID INT AUTO_INCREMENT PRIMARY KEY,
   keyName VARCHAR(255),
-  lastPos VARCHAR(255)
+  lastPos VARCHAR(255),
+  triggered BOOLEAN
 );
 
 CREATE TABLE usr_key(
