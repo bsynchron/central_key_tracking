@@ -69,23 +69,27 @@ include("$root/controllers/SQLController.php");
 
   setInterval(() => {
 	const http = new XMLHttpRequest();
-	http.open("GET", 'localhost:8080/api/sql/query/track_keys?token=x');
+  let server_ip = '10.20.30.103';
+  let port = 8080;
+  let uri = server_ip + ':' + port + '/api/sql/query/track_keys';
+  console.log(uri);
+	http.open("GET", 'http://' + uri + '?token=x');
 	http.send();
 
-	http.onreadytatechange=(e)=>{
+	http.onreadystatechange=(e)=>{
 		// remove all markers
-		markers.foreach((marker) => {
-			marker.remover();
+		markers.forEach((marker) => {
+			marker.remove();
 		})
 
 		markers = [];
 
 
 		// add new markers
-		console.log(Http.responseText);
-		let keys = JSON.parse(Http.responseText);
-		jsonObj.foreach((key) => {
-			latlong = key['lastpos'].split(',');
+		console.log(http.responseText);
+		let keys = JSON.parse(http.responseText);
+		keys['content'].forEach((key) => {
+			latlong = key['lastPos'].split(',');
 			lat = lastlong[0];
 			long = lastlong[1];
 			markers.push(
