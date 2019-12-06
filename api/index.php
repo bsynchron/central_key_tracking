@@ -11,7 +11,7 @@ $root = $_SERVER['DOCUMENT_ROOT'];
 include("$root/controllers/SQLController.php");
 include("$root/config/tokens.php");
 
-$request = substr($_SERVER['REQUEST_URI'], 4);
+$request = explode("?",substr($_SERVER['REQUEST_URI'], 4))[0];
 if(substr($request, 0, 1) != "/"){
   $request = "/$request";
 }
@@ -19,6 +19,10 @@ if(substr($request, 0, 1) != "/"){
 $args = explode("?", $request);
 $api_requests = explode("/", $args[0]);
 unset($args[0]);
+
+//set every element to lower case
+$api_requests = array_map('strtolower', $api_requests);
+
 file_put_contents("php://stdout", json_encode($api_requests)."\n");
 
 
@@ -30,7 +34,7 @@ if(!isset($_GET['token'])){
   print(json_encode($response));
   die();
 }
-debug("token = ".$_GET['token']." ".array_search($_GET['token'], $tokens));
+debug("token = ".$_GET['token']." / token index = ".array_search($_GET['token'], $tokens));
 if(!is_numeric(array_search($_GET['token'], $tokens)) or !isset($_GET['token'])){
   $response=["rc" => 401, "requested" => $api_requests[2], "error" => "Invalid token"];
   http_response_code(401);
@@ -74,20 +78,50 @@ switch ($api_requests[1]) {
           $response['error'] = 'No data given';
           http_response_code(400);
         }
-      } elseif($api_requests[2] == "update") {
-        $idfield = $_POST['idfield'];
-        $identifier = $_POST['identifier'];
-        $newval = $_POST['newval'];
-        $field = $_POST['field'];
-        $sc->query("UPDATE $api_requests[3] SET $field = '$newval' WHERE $idfield == $identifier;");
       } else {
         $sc->debug("TABLE NOT GIVEN");
         $response['rc'] = 400;
         $response['error'] = 'Table not given';
         http_response_code(400);
       }
+    } elseif($api_requests[2] == "update") {
+      $missing_post = [];
+
+      if(isset($_POST['idfield'])){
+        $idfield = $_POST['idfield'];
+      } else {
+        array_push($missing_post, "idfield");
+      }
+
+      if(isset($_POST['identifier'])){
+        $identifier = $_POST['identifier'];
+      } else {
+        array_push($missing_post, "identifier");
+      }
+
+      if(isset($_POST['newval'])){
+        $newval = $_POST['newval'];
+      } else {
+        array_push($missing_post, "newval");
+      }
+
+      if(isset($_POST['field'])){
+        $field = $_POST['field'];
+      } else {
+        array_push($missing_post, "field");
+      }
+
+      if($missing_post == []){
+        $sql_result = $sc->query("UPDATE $api_requests[3] SET $field = '$newval' WHERE $idfield == $identifier;");
+        $response = array_push_assoc($response, "content", $sql_result);
+      } else {
+        $response['rc'] = 400;
+        $response['error'] = "Missing POST data!";
+        $response['error_detail'] = $missing_post;
+      }
+
     } else {
-      debug("ILLIGAL METHOD");
+      debug("ILLIGAL METHOD [$api_requests[2]]");
       $response['rc'] = 400;
       $response['error'] = 'Method not avaliable';
       http_response_code(400);
@@ -95,7 +129,9 @@ switch ($api_requests[1]) {
     break;
 
   default:
-    print("404");
+    $response['rc'] = 404;
+    $response['error'] = "Not found";
+    http_response_code(404);
     break;
 }
 
