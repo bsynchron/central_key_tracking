@@ -69,15 +69,16 @@ include("$root/controllers/SQLController.php");
 
   setInterval(() => {
 	const http = new XMLHttpRequest();
-  let server_ip = '10.20.30.103';
-  let port = 8080;
-  let uri = server_ip + ':' + port + '/api/sql/query/track_keys';
-  console.log(uri);
+  	let server_ip = '10.20.30.103';
+  	let port = 8080;
+  	let uri = server_ip + ':' + port + '/api/sql/query/track_keys';
+  	console.log(uri);
+
 	http.open("GET", 'http://' + uri + '?token=x');
 	http.send();
 
 	http.onreadystatechange=(e)=>{
-		// remove all markers
+	// remove all markers
 		markers.forEach((marker) => {
 			marker.remove();
 		})
@@ -88,16 +89,16 @@ include("$root/controllers/SQLController.php");
 		// add new markers
 		console.log(http.responseText);
 		let keys = JSON.parse(http.responseText);
-		keys['content'].forEach((key) => {
-			latlong = key['lastPos'].split(',');
+		for (let key in keys.content) {
+			latlong = key.lastPos.split(',');
 			lat = lastlong[0];
 			long = lastlong[1];
 			markers.push(
 				L.circle([lat, long], {radius: 10, color: 'red'})
 				.addTo(map)
-				.bindPopup(key['keyName'])
-			);
-		})
+				.bindPopup(key.keyName)
+			)
+		}
 	}
   }, 1000);
 	// markers.push(
