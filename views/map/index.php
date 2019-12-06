@@ -65,8 +65,37 @@ include("$root/controllers/SQLController.php");
         .addTo(map)
         .bindPopup('".$key['keyName']."'));");
     }
-
   ?>
+
+  setInterval(() => {
+	const http = new XMLHttpRequest();
+	http.open("GET", 'localhost:8080/api/sql/query/track_keys?token=x');
+	http.send();
+
+	http.onreadytatechange=(e)=>{
+		// remove all markers
+		markers.foreach((marker) => {
+			marker.remover();
+		})
+
+		markers = [];
+
+
+		// add new markers
+		console.log(Http.responseText);
+		let keys = JSON.parse(Http.responseText);
+		jsonObj.foreach((key) => {
+			latlong = key['lastpos'].split(',');
+			lat = lastlong[0];
+			long = lastlong[1];
+			markers.push(
+				L.circle([lat, long], {radius: 10, color: 'red'})
+				.addTo(map)
+				.bindPopup(key['keyName'])
+			);
+		})
+	}
+  }, 1000);
 	// markers.push(
 	// 	L.circle([53.4996733, 10.0028465], {radius: 10, color: 'red'})
 	// 		.addTo(map)
