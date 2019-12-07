@@ -70,10 +70,10 @@ include("$root/controllers/SQLController.php");
 
   setInterval(() => {
 	const http = new XMLHttpRequest();
-  	let server_ip = '10.20.30.103';
+  	let server_ip = '<?php print $_SERVER["SERVER_NAME"]; ?>';
   	let port = 8080;
   	let uri = server_ip + ':' + port + '/api/sql/query/track_keys';
-  	console.log(uri);
+  	//console.log(uri);
 
 	http.open("GET", 'http://' + uri + '?token=x');
 	http.send();
@@ -86,26 +86,31 @@ include("$root/controllers/SQLController.php");
 
 		markers = [];
 
+    if (http.status != 200 && http.readyState != 4) {
+        console.log("ERROR: "+http.status+" / "+http.readyState);
+    }
+    if(http.status == 200 && http.readyState == 4){
+      // add new markers
+  		console.log(http.responseText);
+  		let keys = JSON.parse(http.responseText);
+  		keys.content.forEach((key) => {
+  			latlong = key.lastPos.split(',');
+  			lat = latlong[0];
+  			long = latlong[1];
 
-		// add new markers
-		console.log(http.responseText);
-		let keys = JSON.parse(http.responseText).content;
-		keys.forEach((key) => {
-			latlong = key.lastPos.split(',');
-			lat = latlong[0];
-			long = latlong[1];
+  			let color = 'red';
+  			if(key.triggered == 1) {
+  				color = 'blue';
+  			}
 
-			let color = 'red';
-			if(key.triggered == 1) {
-				color = 'blue';
-			}
+  			markers.push(
+  				L.circle([lat, long], {radius: 10, color: color})
+  				.addTo(map)
+  				.bindPopup(key.keyName)
+  			)
+  		})
+    }
 
-			markers.push(
-				L.circle([lat, long], {radius: 10, color: color})
-				.addTo(map)
-				.bindPopup(key.keyName)
-			)
-		})
 	}
   }, 1000);
 	// markers.push(
