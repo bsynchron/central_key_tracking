@@ -5,7 +5,7 @@ $request = $_SERVER['REQUEST_URI'];
 if(substr($request, 0, 4) == "/api"){
   file_put_contents("php://stdout", "API REQUEST\n");
   include "$root/api/index.php";
-  
+
 } else {
   file_put_contents("php://stdout", "NORMAL REQUEST\n");
 
@@ -17,6 +17,10 @@ if(substr($request, 0, 4) == "/api"){
     $request = substr_replace($request, "", -1);
   }
 
+  $args = explode("?", $request)[1];
+  $request = explode("?", $request)[0];
+
+  file_put_contents("php://stdout", "ARGS: $args\n");
   $pathindex = array_search($request, $paths);
 
   if(is_int($pathindex)){

@@ -155,6 +155,36 @@ switch ($api_requests[1]) {
     }
     break;
 
+  case 'auth':
+    if(isset($api_requests[2]) and $api_requests[2] != ""){
+      if($api_requests[2] == "login"){
+        //do login
+        $user = base64_decode($_POST['user']);
+        $pass = base64_decode($_POST['pass']);
+
+        $dbUser = $sc->query("SELECT pass,role FROM users where name = '$user';")[0];
+
+        $dbHash = $dbUser['pass'];
+        $dbRole = $dbUser['role'];
+
+        if(sha1($pass) === $dbHash){
+          @session_start();
+          $response['auth'] = true;
+          $_SESSION['user'] = $user;
+          $_SESSION['role'] = $dbRole;
+          debug("SESSION: ".json_encode($_SESSION));
+        } else {
+          $response['auth'] = false;
+        }
+      } elseif($api_requests[2] == "register"){
+        //do register
+      }
+    } else {
+      $response['rc'] = 400;
+      $response['error'] = "Method not found!";
+    }
+    break;
+
   default:
     $response['rc'] = 404;
     $response['error'] = "Not found";
