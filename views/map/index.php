@@ -86,7 +86,7 @@ include("$root/controllers/SQLController.php");
 
 		markers = [];
 
-    if (http.status != 200 && http.readyState != 4) {
+    if (http.status != 200) {
         console.log("ERROR: "+http.status+" / "+http.readyState);
     }
     if(http.status == 200 && http.readyState == 4){
