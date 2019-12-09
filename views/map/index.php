@@ -94,6 +94,7 @@ include("$root/controllers/SQLController.php");
   		console.log(http.responseText);
   		let keys = JSON.parse(http.responseText);
   		keys.content.forEach((key) => {
+        holder = key.holder;
   			latlong = key.lastPos.split(',');
   			lat = latlong[0];
   			long = latlong[1];
@@ -103,16 +104,19 @@ include("$root/controllers/SQLController.php");
   				color = 'blue';
   			}
 
-  			markers.push(
-  				L.circle([lat, long], {radius: 10, color: color})
-  				.addTo(map)
-  				.bindPopup(key.keyName)
-  			)
+
+        if(holder == "<?php print($_SESSION['user']); ?>"){
+          markers.push(
+            L.circle([lat, long], {radius: 10, color: color})
+            .addTo(map)
+            .bindPopup(key.keyName)
+          )
+        }
   		})
     }
 
 	}
-  }, 1000);
+}, 1900);
 	// markers.push(
 	// 	L.circle([53.4996733, 10.0028465], {radius: 10, color: 'red'})
 	// 		.addTo(map)
