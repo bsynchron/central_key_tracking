@@ -42,7 +42,7 @@ if(!is_numeric(array_search($_GET['token'], $tokens)) or !isset($_GET['token']))
   die();
 }
 
-$response=["rc" => 200, "endpoint" => "$request"];
+$response=["rc" => 200, "ts" => time(), "endpoint" => "$request"];
 
 switch ($api_requests[1]) {
   case 'test':
