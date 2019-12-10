@@ -178,6 +178,23 @@ switch ($api_requests[1]) {
         }
       } elseif($api_requests[2] == "register"){
         //do register
+
+        if(!isset($_POST['user']) or !isset($_POST['pass'])){
+          $response['rc'] = 400;
+          $response['error'] = "No data given!";
+          break;
+        }
+
+        $user = base64_decode($_POST['user']);
+        $passHash = sha1(base64_decode($_POST['pass']));
+
+        if(!$sc->query("INSERT INTO users (name, role, pass) VALUES ('$user', 'user', '$passHash');")){
+          $response['rc'] = 400;
+          $response['Failed to insert user!'];
+        } else {
+          $response['auth'] = true;
+        }
+
       }
     } else {
       $response['rc'] = 400;

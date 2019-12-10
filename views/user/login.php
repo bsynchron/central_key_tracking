@@ -19,22 +19,27 @@
         let response = JSON.parse(this.responseText);
         console.log(response.auth);
         if(response.auth == true){
-          window.location.replace("/");
+          window.location.replace("<?php print($_SESSION['wanted']); ?>");
         }
       };
       http.send(data);
     }
   </script>
+  <style>
+    body {font-family: sans-serif;}
+  </style>
+  <link rel="stylesheet" type="text/css" href="/src/css/login.css">
 </head>
 
-<p>LOGIN</p>
-
-
-<form action="#" onsubmit="login(this.name.value, this.pass.value);">
-  <input id="name" type="text" placeholder="Name"></input>
-  <input id="pass" type="password" placeholder="Password"></input>
-  <input type="submit" value="Login"></input>
-</form>
+<div class="center">
+  <p>LOGIN</p>
+  <form action="#" onsubmit="login(this.name.value, this.pass.value);">
+    <input class="textfield" id="name" type="text" placeholder="Name"></input><br>
+    <input class="textfield" id="pass" type="password" placeholder="Password"></input>
+    <br><br><input type="submit" value="Login"></input>
+  </form>
+  <a href="/register">Register Pages</a>
+</div>
 <?php
 
 

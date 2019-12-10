@@ -8,8 +8,13 @@ if(substr($request, 0, 4) == "/api"){
 } else {
   file_put_contents("php://stdout", "NORMAL REQUEST\n");
 
-  if(!isset($_SESSION['user'])){
+$allowed = ['/register'];
+
+  if(!isset($_SESSION['user']) and !in_array($request, $allowed)){
+    file_put_contents("php://stdout", "REDIRECTED TO LOGIN - WANTED $request\n");
+    $_SESSION['wanted'] = $request;
     require "$root/views/user/login.php";
+    die();
   }
 
   $paths = ["/","/views/index.php","CKT",
