@@ -24,7 +24,7 @@ include("$root/controllers/SQLController.php");
 			</div>
 	</div>
 	<div id="searchBox">
-		<input id="searchQuerry" onchange="search(this.value)">
+		<input id="searchQuerry" oninput="search(this.value)">
 		<button onclick="closeSearchBox()">&#x2715</button>
 		<span id="searchErrorMsg">No key matching the querry.</span>
 	</div>
@@ -55,6 +55,7 @@ include("$root/controllers/SQLController.php");
 
 	function openSearchBox() {
 		searchBox.style.display = 'block';
+    document.getElementById("searchQuerry").autofocus;
 	}
 
 	function closeSearchBox() {
@@ -64,7 +65,7 @@ include("$root/controllers/SQLController.php");
 	function search(val) {
 		let foundMarkers = 0;
 		markers.forEach((marker) => {
-			if(marker.getPopUp().getContent().includes(val)) {
+			if(marker.getPopup().getContent().includes(val)) {
 				marker.setStyle({color: 'green'})
 				foundMarkers++;
 			} else {
@@ -72,7 +73,7 @@ include("$root/controllers/SQLController.php");
 			}
 		})
 		let searchErrorMsg = document.getElementById('searchErrorMsg');
-		if(foundMarkers) {
+		if(!foundMarkers) {
 			document.getElementById('searchErrorMsg').style.display = 'block';
 		} else {
 			document.getElementById('searchErrorMsg').style.display = 'none';
