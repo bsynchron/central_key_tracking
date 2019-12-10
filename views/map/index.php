@@ -35,6 +35,10 @@ include("$root/controllers/SQLController.php");
 	const menu = document.getElementById('menuOptions');
 	const collapser = document.getElementById('menuCollapser');
 
+
+	const searchBox = document.getElementById('searchBox');
+	var markersInSearch = [];
+
 	document.getElementById('map').style.height = pageHeight + 'px';
 	menu.style.height = pageHeight + 'px';
 
@@ -51,11 +55,9 @@ include("$root/controllers/SQLController.php");
 		collapser.innerHTML = '>>';
 	}
 
-	const searchBox = document.getElementById('searchBox');
-
 	function openSearchBox() {
 		searchBox.style.display = 'block';
-    document.getElementById("searchQuerry").focus();
+    	document.getElementById("searchQuerry").focus();
 	}
 
 	function closeSearchBox() {
@@ -63,21 +65,30 @@ include("$root/controllers/SQLController.php");
 	}
 
 	function search(val) {
-		let foundMarkers = 0;
+		markersInSearch = []
 		markers.forEach((marker) => {
 			if(marker.getPopup().getContent().includes(val)) {
 				marker.setStyle({color: 'green'})
-				foundMarkers++;
+				markersInSearch.push(marker);
 			} else {
 				marker.setStyle({color: 'red'})
 			}
 		})
 		let searchErrorMsg = document.getElementById('searchErrorMsg');
-		if(!foundMarkers) {
+		if(!markersInSearch.length) {
 			document.getElementById('searchErrorMsg').style.display = 'block';
 		} else {
 			document.getElementById('searchErrorMsg').style.display = 'none';
 		}
+	}
+
+	function isInSearch(name) {
+		markersInSearch.forEach((marker) => {
+			if(marker.getPopup().getContent().includes(name)){
+				return true;
+			}
+		})
+		return false;
 	}
 </script>
 <script src="/src/js/leaflet/leaflet.js"></script>
@@ -136,6 +147,9 @@ include("$root/controllers/SQLController.php");
   			if(key.triggered == 1) {
   				color = 'blue';
   			}
+			if(isInSearch(key.keyName)){
+				color = 'green';
+			}
 
 
         if(holder == "<?php print($_SESSION['user']); ?>" || "<?php print($_SESSION['role']); ?>" == "admin"){
