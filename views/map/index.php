@@ -23,16 +23,16 @@ include("$root/controllers/SQLController.php");
 				</ul>
 				<div id="actionBox">
 					<div id="allKeysBox">
-						<?php 
+						<?php
 							echo '<ul>';
 
 							$keys = $sc->query("SELECT * FROM track_keys;");
 							foreach($keys as $key) {
-								if(key['holder'] == $_SESSION['user'] || $_SESSION['user'] == 'admin') {
+								if($key['holder'] == $_SESSION['user'] || $_SESSION['user'] == 'admin') {
 									echo '<li>'.$key['keyName'].'<button>Remove</button><button>Change</button>';
 								}
 							}
-							
+
 							echo '</ul><button>Add key</button>';
 						?>
 					</div>
