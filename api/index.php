@@ -202,6 +202,27 @@ switch ($api_requests[1]) {
     }
     break;
 
+  case 'keys':
+    if(isset($api_requests[2])){
+      if($api_requests[2] == "add"){
+        //add new key
+
+      } elseif($api_requests[2] == "remove"){
+        //remove old key
+
+      } elseif($api_requests[2] == "lend"){
+        //lend key to user
+
+      } else {
+        $response['rc'] = 400;
+        $response['error'] = "Illegal method!";
+      }
+    } else {
+      $response['rc'] = 400;
+      $response['error'] = "No Method given!";
+      break;
+    }
+
   default:
     $response['rc'] = 404;
     $response['error'] = "Not found";
