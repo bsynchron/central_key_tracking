@@ -69,7 +69,7 @@ include("$root/controllers/SQLController.php");
 		markers.forEach((marker) => {
 			if(marker.getPopup().getContent().includes(val)) {
 				marker.setStyle({color: 'green'})
-				markersInSearch.push(marker);
+				markersInSearch.push(marker.getPopup().getContent());
 			} else {
 				marker.setStyle({color: 'red'})
 			}
@@ -84,7 +84,7 @@ include("$root/controllers/SQLController.php");
 
 	function isInSearch(name) {
 		markersInSearch.forEach((marker) => {
-			if(marker.getPopup().getContent().includes(name)){
+			if(marker.includes(name)){
 				return true;
 			}
 		})
