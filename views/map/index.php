@@ -55,7 +55,7 @@ include("$root/controllers/SQLController.php");
 
 	function openSearchBox() {
 		searchBox.style.display = 'block';
-    document.getElementById("searchQuerry").autofocus;
+    document.getElementById("searchQuerry").focus();
 	}
 
 	function closeSearchBox() {
