@@ -21,7 +21,7 @@ $api_requests = explode("/", $args[0]);
 unset($args[0]);
 
 //set every element to lower case
-$api_requests = array_map('strtolower', $api_requests);
+//$api_requests = array_map('strtolower', $api_requests);
 
 file_put_contents("php://stdout", json_encode($api_requests)."\n");
 
@@ -206,12 +206,43 @@ switch ($api_requests[1]) {
     if(isset($api_requests[2])){
       if($api_requests[2] == "add"){
         //add new key
-
+        if(isset($api_requests[3]) and $api_requests[3] != ""){
+          if($sc->query("INSERT INTO track_keys (keyName, lastPos, triggered, holder) VALUES ('$api_requests[3]', '0,0',false,'');")){
+            $response['content'] = true;
+            $response['message'] = "Added Key [$api_requests[3]]";
+          } else {
+            $response['rc'] = 400;
+            $response['error'] = "Could not insert key!";
+          }
+        } else {
+          //no keyName given
+          $response['rc'] = 400;
+          $response['error'] = "No key name given!";
+        }
       } elseif($api_requests[2] == "remove"){
         //remove old key
+        if(isset($api_requests[3]) and $api_requests[3] =! ""){
+          $sc->query("DELETE FROM track_keys WHERE keyName = '$api_requests[3]';");
+          $response['content'] = true;
+          $response['message'] = "Removed [$api_requests[3]] from the database!";
+        } else {
+          $response['rc'] = 400;
+          $repsonse['error'] = "Key not given!";
+        }
+        $response['content'] = true;
+        $response['message'] = "Removed Key [$api_requests[3]]";
 
       } elseif($api_requests[2] == "lend"){
         //lend key to user
+        if(isset($api_requests[3]) and isset($api_requests[4])){
+          if($sc->query("UPDATE track_keys SET holder = '$api_requests[4]' WHERE keyName = '$api_requests[3]'")){
+            $response['content'] = true;
+            $response['message'] = "Lend [$api_requests[3]] to $api_requests[4]";
+          } else {
+            $response['rc'] = 400;
+            $response['error'] = "Could not update key!";
+          }
+        }
 
       } else {
         $response['rc'] = 400;
@@ -222,6 +253,7 @@ switch ($api_requests[1]) {
       $response['error'] = "No Method given!";
       break;
     }
+    break;
 
   default:
     $response['rc'] = 404;
