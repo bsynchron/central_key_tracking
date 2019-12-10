@@ -32,6 +32,7 @@ a:link {
     top: 1%;
     left: 10%;
     display: none;
+    z-index: 100000000;
 }
 
 #map {
