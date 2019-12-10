@@ -8,9 +8,6 @@ include("$root/controllers/SQLController.php");
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
   integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
   crossorigin=""/>
-  <style>
-  	body { margin: 0}
-  </style>
 </head>
 <body>
 	<div id="map"></div>
@@ -18,11 +15,18 @@ include("$root/controllers/SQLController.php");
 		<div id="menuCollapser" onclick="showMenu()"><<</div>
 			<div id="menuOptions">
 				<ul>
-					<li>Heatmap</li>
-					<li>All Keys</li>
-					<li>All Users</li>
+					<li><a href="">All Keys</a></li>
+					<li><a href="">All Users</a></li>
+					<li><a href="">Create new key</a></li>
+					<li><a href="">Assign key</a></li>
+					<li><a onclick="openSearchBox()">Search Key</a></li>
 				</ul>
 			</div>
+	</div>
+	<div id="searchBox">
+		<input id="searchQuerry" onchange="search(this.value)">
+		<button onclick="closeSearchBox()">&#x2715</button>
+		<span id="searchErrorMsg">No key matching the querry.</span>
 	</div>
 </body>
 <script>
@@ -45,6 +49,34 @@ include("$root/controllers/SQLController.php");
 		menu.style.display = 'block';
 		collapser.setAttribute('onclick', 'hideMenu()');
 		collapser.innerHTML = '>>';
+	}
+
+	const searchBox = document.getElementById('searchBox');
+
+	function openSearchBox() {
+		searchBox.style.display = 'block';
+	}
+
+	function closeSearchBox() {
+		searchBox.style.display = 'none';
+	}
+
+	function search(val) {
+		let foundMarkers = 0;
+		markers.forEach((marker) => {
+			if(marker.getPopUp().getContent().includes(val)) {
+				marker.setStyle({color: 'green'})
+				foundMarkers++;
+			} else {
+				marker.setStyle({color: 'red'})
+			}
+		})
+		let searchErrorMsg = document.getElementById('searchErrorMsg');
+		if(foundMarkers) {
+			document.getElementById('searchErrorMsg').style.display = 'block';
+		} else {
+			document.getElementById('searchErrorMsg').style.display = 'none';
+		}
 	}
 </script>
 <script src="/src/js/leaflet/leaflet.js"></script>
