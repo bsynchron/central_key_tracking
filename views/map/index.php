@@ -15,12 +15,28 @@ include("$root/controllers/SQLController.php");
 		<div id="menuCollapser" onclick="showMenu()"><<</div>
 			<div id="menuOptions">
 				<ul>
-					<li><a href="">All Keys</a></li>
+					<li><a onclick="openAllKeys()">All Keys</a></li>
 					<li><a href="">All Users</a></li>
 					<li><a href="">Create new key</a></li>
-					<li><a href="">Assign key</a></li>
+					<li><a onclick="openAssignKey()">Assign key</a></li>
 					<li><a onclick="openSearchBox()">Search Key</a></li>
 				</ul>
+				<div id="actionBox">
+					<div id="allKeysBox">
+						<?php 
+							echo '<ul>';
+
+							$keys = $sc->query("SELECT * FROM track_keys;");
+							foreach($keys as $key) {
+								if(key['holder'] == $_SESSION['user'] || $_SESSION['user'] == 'admin') {
+									echo '<li>'.$key['keyName'].'<button>Remove</button><button>Change</button>';
+								}
+							}
+							
+							echo '</ul><button>Add key</button>';
+						?>
+					</div>
+				</div>
 			</div>
 	</div>
 	<div id="searchBox">
@@ -39,6 +55,8 @@ include("$root/controllers/SQLController.php");
 	const searchBox = document.getElementById('searchBox');
 	var markersInSearch = [];
 
+	const assignKeyBox = document.getElementById('assignKeyBox');
+
 	document.getElementById('map').style.height = pageHeight + 'px';
 	menu.style.height = pageHeight + 'px';
 
@@ -53,6 +71,14 @@ include("$root/controllers/SQLController.php");
 		menu.style.display = 'block';
 		collapser.setAttribute('onclick', 'hideMenu()');
 		collapser.innerHTML = '>>';
+	}
+
+	function openAllKeys() {
+
+	}
+
+	function openAssignKey() {
+
 	}
 
 	function openSearchBox() {
