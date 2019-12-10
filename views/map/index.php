@@ -137,7 +137,7 @@ include("$root/controllers/SQLController.php");
   			}
 
 
-        if(holder == "<?php print($_SESSION['user']); ?>"){
+        if(holder == "<?php print($_SESSION['user']); ?>" || "<?php print($_SESSION['role']); ?>" == "admin"){
           markers.push(
             L.circle([lat, long], {radius: 10, color: color})
             .addTo(map)
