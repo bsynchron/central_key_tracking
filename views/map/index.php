@@ -67,7 +67,7 @@ include("$root/controllers/SQLController.php");
 	function search(val) {
 		markersInSearch = []
 		markers.forEach((marker) => {
-			if(marker.getPopup().getContent().includes(val)) {
+			if(marker.getPopup().getContent().includes(val) && val != "") {
 				marker.setStyle({color: 'green'})
 				markersInSearch.push(marker.getPopup().getContent());
 			} else {
@@ -85,7 +85,7 @@ include("$root/controllers/SQLController.php");
 	function isInSearch(name) {
 		inSearch = false;
 		markersInSearch.forEach((marker) => {
-			if(marker.includes(name)){
+			if(marker == name){
 				inSearch = true;
 			}
 		})
