@@ -221,17 +221,18 @@ switch ($api_requests[1]) {
         }
       } elseif($api_requests[2] == "remove"){
         //remove old key
-        if(isset($api_requests[3]) and $api_requests[3] =! ""){
+        debug("1 DELETING KEY ".$api_requests[3]);
+        if(isset($api_requests[3]) and !is_null($api_requests[3])){
+          debug("2 DELETING KEY ".$api_requests[3]);
           $sc->query("DELETE FROM track_keys WHERE keyName = '$api_requests[3]';");
           $response['content'] = true;
           $response['message'] = "Removed [$api_requests[3]] from the database!";
+          break;
         } else {
           $response['rc'] = 400;
           $repsonse['error'] = "Key not given!";
+          break;
         }
-        $response['content'] = true;
-        $response['message'] = "Removed Key [$api_requests[3]]";
-
       } elseif($api_requests[2] == "lend"){
         //lend key to user
         if(isset($api_requests[3]) and isset($api_requests[4])){

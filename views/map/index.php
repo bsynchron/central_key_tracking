@@ -24,16 +24,21 @@ include("$root/controllers/SQLController.php");
 				<div id="actionBox">
 					<div id="allKeysBox">
 						<?php
-							echo '<ul>';
-
+							echo '<table id="keyListing">';
 							$keys = $sc->query("SELECT * FROM track_keys;");
 							foreach($keys as $key) {
 								if($key['holder'] == $_SESSION['user'] || $_SESSION['user'] == 'admin') {
-									echo '<li>'.$key['keyName'].'<button>Remove</button><button>Change</button>';
+                  echo '<tr>';
+                  echo "<td>".$key['keyName']."</td>";
+                  echo "<td><button value='".$key['keyName']."' onclick='removeKey(this.value)'>Remove</button></td>";
+                  echo "<td><button value='".$key['keyName']."' onclick=''>Change</button></td>";
+                  echo "</tr>";
+                  //echo '<li>'.$key['keyName'].'<button>Remove</button><button>Change</button>';
 								}
 							}
 
-							echo '</ul><button>Add key</button>';
+							echo '</ul><input id="addKeyField" placeholder="key name"></input><button onclick=\'addKey(document.getElementById("addKeyField").value);\'>Add key</button>';
+              echo "</table>";
 						?>
 					</div>
 				</div>
@@ -117,6 +122,45 @@ include("$root/controllers/SQLController.php");
 		})
 		return inSearch;
 	}
+  function removeKey(name){
+    const http = new XMLHttpRequest();
+    	let server_ip = '<?php print $_SERVER["SERVER_NAME"]; ?>';
+    	let port = 8080;
+    	let uri = server_ip + ':' + port + '/api/keys/remove/'+ name;
+    	//console.log(uri);
+
+  	http.open("GET", 'http://' + uri + '?token=x');
+  	http.send();
+
+    var table = document.getElementById("keyListing");
+
+    for(var i = 0; i < table.rows.length; i++){
+      if(table.rows[i].cells[0].innerHTML == name){
+        table.deleteRow(i);
+      }
+    }
+  }
+
+  function addKey(name){
+    const http = new XMLHttpRequest();
+    	let server_ip = '<?php print $_SERVER["SERVER_NAME"]; ?>';
+    	let port = 8080;
+    	let uri = server_ip + ':' + port + '/api/keys/add/'+ name;
+    	//console.log(uri);
+
+  	http.open("GET", 'http://' + uri + '?token=x');
+  	http.send();
+
+    var table = document.getElementById("keyListing");
+    var row = table.insertRow(-1);
+    var cell_kn = row.insertCell(0);
+    var cell_rm = row.insertCell(1);
+    var cell_ch = row.insertCell(2);
+
+    cell_kn.innerHTML = name;
+    cell_rm.innerHTML = "<button value='" + name + "' onclick='removeKey(this.value)'>Remove</button>";
+    cell_ch.innerHTML = "<button value='" + name + "' onclick=''>Change</button>";
+  }
 </script>
 <script src="/src/js/leaflet/leaflet.js"></script>
 <script>
