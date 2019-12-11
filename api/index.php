@@ -145,9 +145,9 @@ switch ($api_requests[1]) {
         break;
       }
       //key found
-      $sc->query("UPDATE track_keys SET triggered = true;");
+      $sc->query("UPDATE track_keys SET triggered = true WHERE keyName = '$api_requests[2]';");
       $response['content'] = true;
-      debug("SET UP TRIGGER [".$key[0]['keyName']."]");
+      debug("SET UP TRIGGER [".json_encode($key)."]");
     } else {
       $response['rc'] = 401;
       $response['error'] = "No key given!";
@@ -207,12 +207,22 @@ switch ($api_requests[1]) {
       if($api_requests[2] == "add"){
         //add new key
         if(isset($api_requests[3]) and $api_requests[3] != ""){
-          if($sc->query("INSERT INTO track_keys (keyName, lastPos, triggered, holder) VALUES ('$api_requests[3]', '0,0',false,'');")){
-            $response['content'] = true;
-            $response['message'] = "Added Key [$api_requests[3]]";
+          if(isset($_POST['pos'])){
+            if($sc->query("INSERT INTO track_keys (keyName, lastPos, triggered, holder) VALUES ('$api_requests[3]', '".$_POST['pos']."',false,'".$_SESSION['user']."');")){
+              $response['content'] = true;
+              $response['message'] = "Added Key [$api_requests[3]]";
+            } else {
+              $response['rc'] = 400;
+              $response['error'] = "Could not insert key!";
+            }
           } else {
-            $response['rc'] = 400;
-            $response['error'] = "Could not insert key!";
+            if($sc->query("INSERT INTO track_keys (keyName, lastPos, triggered, holder) VALUES ('$api_requests[3]', '0,0',false,'');")){
+              $response['content'] = true;
+              $response['message'] = "Added Key [$api_requests[3]]";
+            } else {
+              $response['rc'] = 400;
+              $response['error'] = "Could not insert key!";
+            }
           }
         } else {
           //no keyName given
