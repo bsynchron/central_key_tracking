@@ -6,3 +6,8 @@ if(isset($_SESSION['user'])){
 
 
 ?>
+<body onload="window.location.href = '/map';">
+<a href="/map">Login</a>
+
+
+</body>
