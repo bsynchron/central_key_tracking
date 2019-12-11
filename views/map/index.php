@@ -23,7 +23,6 @@ include("$root/controllers/SQLController.php");
 				<div id="actionBox">
 					<div id="allKeysBox">
 						<?php
-
 							echo '<table id="keyListing">';
 							$keys = $sc->query("SELECT * FROM track_keys;");
 							foreach($keys as $key) {
@@ -143,7 +142,6 @@ include("$root/controllers/SQLController.php");
 		})
 		return inSearch;
 	}
-
   function removeKey(name){
     const http = new XMLHttpRequest();
     	let server_ip = '<?php print $_SERVER["SERVER_NAME"]; ?>';
@@ -184,7 +182,6 @@ include("$root/controllers/SQLController.php");
     cell_ch.innerHTML = "<button value='" + name + "' onclick=''>Change</button>";
     //console.log(map.getCenter()); create new keys on current center
   }
-
 </script>
 <script src="/src/js/leaflet/leaflet.js"></script>
 <script>
