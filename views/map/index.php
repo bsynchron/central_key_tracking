@@ -160,6 +160,7 @@ include("$root/controllers/SQLController.php");
     cell_kn.innerHTML = name;
     cell_rm.innerHTML = "<button value='" + name + "' onclick='removeKey(this.value)'>Remove</button>";
     cell_ch.innerHTML = "<button value='" + name + "' onclick=''>Change</button>";
+    //console.log(map.getCenter()); create new keys on current center
   }
 </script>
 <script src="/src/js/leaflet/leaflet.js"></script>
