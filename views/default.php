@@ -6,4 +6,5 @@
   print("<title>$title</title>");
 ?>
 <meta charset="UTF-8">
+<link rel="icon" href="/src/favicon.ico" type="image/x-icon"/>
 </head>

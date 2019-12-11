@@ -29,25 +29,31 @@ include("$root/controllers/SQLController.php");
 								if($key['holder'] == $_SESSION['user'] || $_SESSION['user'] == 'admin') {
                   echo '<tr>';
                   echo "<td>".$key['keyName']."</td>";
-                  echo "<td><button value='".$key['keyName']."' onclick='removeKey(this.value)'>Remove</button></td>";
-                  echo "<td><button value='".$key['keyName']."' onclick=\"notifyKey('".$key['keyName']."')\">Notify</button></td>";
+                  echo "<td><button style='font-weight: bold;' value='".$key['keyName']."' onclick='removeKey(this.value)'>X</button></td>";
+                  echo "<td><button value='".$key['keyName']."' onclick=\"notifyKey('".$key['keyName']."')\">&#9200;</button></td>";
                   echo "</tr>";
                   //echo '<li>'.$key['keyName'].'<button>Remove</button><button>Change</button>';
 								}
 							}
 
-							echo '</ul><input id="addKeyField" placeholder="key name"></input><button onclick=\'addKey(document.getElementById("addKeyField").value);\'>Add key</button>';
+							echo '</ul><input id="addKeyField" placeholder="key name"></input><button style="font-weight: bold;" onclick=\'addKey(document.getElementById("addKeyField").value);\'>+</button>';
               echo "</table>";
 						?>
 					</div>
-					<div id="createKeyBox">
-						Key Name:<input id="createKeyName">
-						<button>Submit</button>
-					</div>
 					<div id="assignKeyBox">
-						Key Name:<input id="assignKeyName">
-						User Name:<input id="assignUserName">
-						<button>Submit</button>
+            <table>
+              <tr>
+                <td>Key Name:</td>
+                <td><input id="assignKeyName"></td>
+              </tr>
+              <tr>
+                <td>User Name:</td>
+                <td><input id="assignUserName"></td>
+              </tr>
+              <tr>
+                <td><button onclick="assignKey(document.getElementById('assignKeyName').value, document.getElementById('assignUserName').value);">&#128273</button></td>
+              </tr>
+            </table>
 					</div>
 				</div>
 			</div>
@@ -70,7 +76,6 @@ include("$root/controllers/SQLController.php");
 
 	const allKeysBox = document.getElementById('allKeysBox');
 	const assignKeyBox = document.getElementById('assignKeyBox');
-	const createKeyBox = document.getElementById('createKeyBox');
 
 	document.getElementById('map').style.height = pageHeight + 'px';
 	menu.style.height = pageHeight + 'px';
@@ -90,19 +95,11 @@ include("$root/controllers/SQLController.php");
 
 	function openAllKeys() {
 		assignKeyBox.style.display = 'none';
-		createKeyBox.style.display = 'none';
 		allKeysBox.style.display = 'block';
 	}
 
 	function openAssignKey() {
 		assignKeyBox.style.display = 'block';
-		createKeyBox.style.display = 'none';
-		allKeysBox.style.display = 'none';
-	}
-
-	function openCreateKey() {
-		assignKeyBox.style.display = 'none';
-		createKeyBox.style.display = 'block';
 		allKeysBox.style.display = 'none';
 	}
 
@@ -165,6 +162,9 @@ include("$root/controllers/SQLController.php");
     if(name == ""){
       return false;
     }
+
+    document.getElementById("addKeyField").value = "";
+
     const http = new XMLHttpRequest();
     	let server_ip = '<?php print $_SERVER["SERVER_NAME"]; ?>';
     	let port = 8080;
@@ -187,8 +187,8 @@ include("$root/controllers/SQLController.php");
     var cell_ch = row.insertCell(2);
 
     cell_kn.innerHTML = name;
-    cell_rm.innerHTML = "<button value='" + name + "' onclick='removeKey(this.value)'>Remove</button>";
-    cell_ch.innerHTML = "<button value='" + name + "' onclick='notifyKey(this.value)'>Notify</button>";
+    cell_rm.innerHTML = "<button style='font-weight: bold;' value='" + name + "' onclick='removeKey(this.value)'>X</button>";
+    cell_ch.innerHTML = "<button value='" + name + "' onclick='notifyKey(this.value)'>⏰</button>";
   }
 
   function notifyKey(name){
@@ -200,6 +200,20 @@ include("$root/controllers/SQLController.php");
 
   	http.open("GET", 'http://' + uri + '?token=x');
   	http.send();
+  }
+
+  function assignKey(key, user){
+    const http = new XMLHttpRequest();
+      let server_ip = '<?php print $_SERVER["SERVER_NAME"]; ?>';
+      let port = 8080;
+      let uri = server_ip + ':' + port + '/api/keys/lend/'+ key + "/" + user;
+      //console.log(uri);
+
+    http.open("GET", 'http://' + uri + '?token=x');
+    http.send();
+
+    document.getElementById("assignKeyName").value = "";
+    document.getElementById("assignUserName").value = "";
   }
 </script>
 <script src="/src/js/leaflet/leaflet.js"></script>
