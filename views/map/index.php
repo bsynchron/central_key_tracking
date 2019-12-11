@@ -40,6 +40,15 @@ include("$root/controllers/SQLController.php");
               echo "</table>";
 						?>
 					</div>
+					<div id="createKeyBox">
+						Key Name:<input id="createKeyName">
+						<button>Submit</button>
+					</div>
+					<div id="assignKeyBox">
+						Key Name:<input id="assignKeyName">
+						User Name:<input id="assignUserName">
+						<button>Submit</button>
+					</div>
 				</div>
 			</div>
 	</div>
@@ -59,7 +68,9 @@ include("$root/controllers/SQLController.php");
 	const searchBox = document.getElementById('searchBox');
 	var markersInSearch = [];
 
+	const allKeysBox = document.getElementById('allKeysBox');
 	const assignKeyBox = document.getElementById('assignKeyBox');
+	const createKeyBox = document.getElementById('createKeyBox');
 
 	document.getElementById('map').style.height = pageHeight + 'px';
 	menu.style.height = pageHeight + 'px';
@@ -78,11 +89,21 @@ include("$root/controllers/SQLController.php");
 	}
 
 	function openAllKeys() {
-
+		assignKeyBox.style.display = 'none';
+		createKeyBox.style.display = 'none';
+		allKeysBox.style.display = 'block';
 	}
 
 	function openAssignKey() {
+		assignKeyBox.style.display = 'block';
+		createKeyBox.style.display = 'none';
+		allKeysBox.style.display = 'none';
+	}
 
+	function openCreateKey() {
+		assignKeyBox.style.display = 'none';
+		createKeyBox.style.display = 'block';
+		allKeysBox.style.display = 'none';
 	}
 
 	function openSearchBox() {
@@ -202,10 +223,11 @@ include("$root/controllers/SQLController.php");
     }
   ?>
 
+	const server_ip = '<?php print $_SERVER["SERVER_NAME"]; ?>';
+	const port = 8080;
+
   setInterval(() => {
 	const http = new XMLHttpRequest();
-  	let server_ip = '<?php print $_SERVER["SERVER_NAME"]; ?>';
-  	let port = 8080;
   	let uri = server_ip + ':' + port + '/api/sql/query/track_keys';
   	//console.log(uri);
 

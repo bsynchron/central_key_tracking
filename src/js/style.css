@@ -42,6 +42,10 @@ a:link {
     width: 100%;
 }
 
+#allKeysBox, #createKeyBox, #assignKeyBox {
+    display: hidden;
+}
+
 #map {
     height: 500px;
 }
