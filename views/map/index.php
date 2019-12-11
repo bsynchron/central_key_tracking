@@ -16,10 +16,9 @@ include("$root/controllers/SQLController.php");
 			<div id="menuOptions">
 				<ul>
 					<li><a onclick="openAllKeys()">All Keys</a></li>
-					<li><a href="">All Users</a></li>
-					<li><a href="">Create new key</a></li>
 					<li><a onclick="openAssignKey()">Assign key</a></li>
 					<li><a onclick="openSearchBox()">Search Key</a></li>
+          <li><a href="/logout">Logout</a></li>
 				</ul>
 				<div id="actionBox">
 					<div id="allKeysBox">
@@ -31,7 +30,7 @@ include("$root/controllers/SQLController.php");
                   echo '<tr>';
                   echo "<td>".$key['keyName']."</td>";
                   echo "<td><button value='".$key['keyName']."' onclick='removeKey(this.value)'>Remove</button></td>";
-                  echo "<td><button value='".$key['keyName']."' onclick=''>Change</button></td>";
+                  echo "<td><button value='".$key['keyName']."' onclick=\"notifyKey('".$key['keyName']."')\">Notify</button></td>";
                   echo "</tr>";
                   //echo '<li>'.$key['keyName'].'<button>Remove</button><button>Change</button>';
 								}
@@ -142,14 +141,23 @@ include("$root/controllers/SQLController.php");
   }
 
   function addKey(name){
+    if(name == ""){
+      return false;
+    }
     const http = new XMLHttpRequest();
     	let server_ip = '<?php print $_SERVER["SERVER_NAME"]; ?>';
     	let port = 8080;
     	let uri = server_ip + ':' + port + '/api/keys/add/'+ name;
     	//console.log(uri);
 
-  	http.open("GET", 'http://' + uri + '?token=x');
-  	http.send();
+    view_pos = map.getCenter();
+    view_pos = view_pos.lat + ", " + view_pos.lng;
+
+    var data = new FormData();
+    data.append('pos', view_pos);
+
+  	http.open("POST", 'http://' + uri + '?token=x');
+  	http.send(data);
 
     var table = document.getElementById("keyListing");
     var row = table.insertRow(-1);
@@ -159,8 +167,18 @@ include("$root/controllers/SQLController.php");
 
     cell_kn.innerHTML = name;
     cell_rm.innerHTML = "<button value='" + name + "' onclick='removeKey(this.value)'>Remove</button>";
-    cell_ch.innerHTML = "<button value='" + name + "' onclick=''>Change</button>";
-    //console.log(map.getCenter()); create new keys on current center
+    cell_ch.innerHTML = "<button value='" + name + "' onclick='notifyKey(this.value)'>Notify</button>";
+  }
+
+  function notifyKey(name){
+    const http = new XMLHttpRequest();
+    	let server_ip = '<?php print $_SERVER["SERVER_NAME"]; ?>';
+    	let port = 8080;
+    	let uri = server_ip + ':' + port + '/api/notify/'+ name;
+    	//console.log(uri);
+
+  	http.open("GET", 'http://' + uri + '?token=x');
+  	http.send();
   }
 </script>
 <script src="/src/js/leaflet/leaflet.js"></script>
